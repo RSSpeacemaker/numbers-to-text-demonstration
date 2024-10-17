@@ -1,19 +1,27 @@
 import { useEffect, useState, useRef } from 'react'
-import reactLogo from './assets/react.svg'
-import logo from '/logo.svg'
 import './App.css'
 
+const SignatureLogo = () => {
+  // Construct logo signature
+  return (
+    <div>
+      <img src="./src/assets/logo.svg" className="logo" />
+    </div>
+  );
+};
+
 const SortAlphabeticallyButton = ({ handleClick, visible }) => {
+  // Sort button
   return (
     <button
       className={visible ? "sort-button" : "sort-button-invisible"}
       onClick={() => handleClick()}
-    >Sort Numbers</button>
+    >Sort Numbers Alphabetically</button>
   )
 }
 
 const TextInputContainer = ({ handleSubmit }) => {
-  // Construct variables we will need
+  // Construct variables and functions we will need
   const [text, setText] = useState("");
 
   // Change text based on input
@@ -23,18 +31,19 @@ const TextInputContainer = ({ handleSubmit }) => {
     });
   }
 
+  // Handle click function
   const handleClick = () => {
     handleSubmit(text);
   }
 
+  // return text input and submit button
   return (
     <div className="text-input-container">
       <textarea
         className="text-field"
         type="text"
-        placeholder="Provide integers here ..."
+        placeholder="- type comma separated integers here -"
         onInput={(e) => {handleInput(e)}}
-        // onKeyDown={(e) => {handleKey(e)}}
         value={text}
       />
       <SortAlphabeticallyButton handleClick={ handleClick } visible={text.length > 0}/>
@@ -42,83 +51,99 @@ const TextInputContainer = ({ handleSubmit }) => {
   )
 }
 
+const ErrorMessage = ({ visible }) => {
+  return (
+    <div className={ visible ? "error-notification" : "error-notification-invisible" }>
+      <b>error</b>
+    </div>
+  );
+};
+
+const Explanation = ({ visible }) => {
+  return (
+    <div className={ visible ? "explanation" : "explanation-invisible" }>
+      Valid inputs can only include numbers, commas, and spaces.<br/>
+      For example:<br/>
+      <b>1, 23, 456, 7890</b>
+    </div>
+  );
+};
+
+const Result = ({ str, key }) => {
+  return (
+    <div className="result" key={key}>{str}</div>
+  )
+}
+
+const ResultsContainer = ( { strings } ) => {
+  return <div className="results-container">
+    {
+      strings.map((str, index) => (
+        <Result str={str} key={index}/>
+      ))
+    }
+  </div>
+}
+
 const AlphabeticalSortingScreen = () => {
-  const handleSubmit = (e) => {
-    console.log("e: ", e)
-    if(isValidString(e)) {
-      console.log("is valid...")
+  const [strings, setStrings] = useState([]);
+  const [error, setError] = useState(false);
+
+  // Handle submit function
+  const handleSubmit = (text) => {
+    if(isValidString(text)) {
+      setError(false);
+
+      convertUserInput(text).then(result => {
+        setStrings(result);
+      })
     } else {
-      console.log("is not valid...")
+      setError(true);
     }
   }
 
+  // Return function
   return (
     <>
-      <div className="container">
+      <SignatureLogo/>
+      <div className="interaction-container">
         <h1>Numbers To Text Sorting Algorithm</h1>
-        <TextInputContainer handleSubmit={ handleSubmit }/>        
+        <TextInputContainer handleSubmit={ handleSubmit }/>
+        <ErrorMessage visible={ error }/>
+        <Explanation visible={error}/>
       </div>
+      <ResultsContainer strings={strings}/>
     </>
   )
 }
-
-function OldApp() {
-  const [count, setCount] = useState(0)
-
-  return (
-    <>
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={logo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
-}
-
-  // useEffect(() => {
-  //   if(text.length > 0) {
-
-  //   }
-  // }, [text])
-  
-  // const handleKey = ( e ) => {
-  //   console.log("E: ", e)
-
-  //   const {key, shiftKey} = e;
-
-  //   if(key == "Enter" && shiftKey == false) {
-  //     handleSubmit(text);
-  //     setText("");
-  //   }
-  //   else if(key == "Enter" && shiftKey == true) {
-  //     setText((prevText) => {
-  //       return prevText + "\n"
-  //     });
-  //   } else {
-  //     setText(() => {
-  //       return e.target.value
-  //     })
-  //   }
-  // };
 
 export default AlphabeticalSortingScreen
 
 function isValidString(str) {
-  return /^[\d,\s]+$/.test(str);
+  return /^-?[\d,\s-]+$/.test(str);
+}
+
+function convertUserInput(text) {
+  // Set up options for the fetch request
+  const options = {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({
+      text: text
+    })
+  };
+
+  return fetch("https://v132i7ia88.execute-api.us-east-1.amazonaws.com/production/numbers-to-text-sorting-algorithm",
+    options)
+    .then(response => {
+      if(!response.ok) {
+        throw new Error("Network response was not okay")
+      } else {
+        return response.json();
+      }
+    }).then(result => {
+      return result.words;
+    })
 }
