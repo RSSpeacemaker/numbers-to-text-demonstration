@@ -1,0 +1,45 @@
+#root {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 2rem;
+  text-align: center;
+}
+
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 10px;
+}
+
+.text-input-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.text-field {
+  padding: 17px;
+  font-family: inherit;
+  height: 70px;
+  min-width: 60vw;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  font-size: 16px;
+  resize: none;
+  overflow-y: auto;
+  box-sizing: border-box;
+  text-align: center;
+  margin-bottom: 17px;
+}
+
+.sort-button {
+  transition: opacity 0.5s ease;
+  opacity: 1;
+}
+
+.sort-button-invisible {
+  transition: opacity 0.5s ease;
+  pointer-events: none;
+  opacity: 0;
+}
