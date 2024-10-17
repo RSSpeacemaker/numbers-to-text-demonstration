@@ -5,7 +5,7 @@ const SignatureLogo = () => {
   // Construct logo signature
   return (
     <div>
-      <img src="./src/assets/logo.svg" className="logo" />
+      <img src="assets/logo.svg" className="logo" />
     </div>
   );
 };
@@ -75,7 +75,7 @@ const OverNineThousand = ({ str }) => {
   // Construct special result for results that are 'over nine-thousand'
   return (
     <div className="result">
-      <img src="./src/assets/its-over-9000.gif" alt="It's Over 9000!" className="its-over-nine-thousand" title={str}/>
+      <img src="assets/its-over-9000.gif" alt="It's Over 9000!" className="its-over-nine-thousand" title={str}/>
     </div>
   )
 }
