@@ -2,4 +2,6 @@
 
 Demonstration of my programming skillset.
 
-- Check out my other work! [ArtStation](https://www.artstation.com/rsspeacemaker/)
+- For the full expereince - [NumbersToTextCodingDemonstration](https://rsspeacemaker.github.io/numbers-to-text-demonstration/)
+
+- Check out my other work - [ArtStation](https://www.artstation.com/rsspeacemaker/)
