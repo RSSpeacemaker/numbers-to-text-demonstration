@@ -58,6 +58,10 @@
   border-radius: 5px;
   border: 1px solid #ccc;
 }
+.its-over-nine-thousand {
+  width: 67px;
+  height: 50px;
+}
 
 .text-input-container {
   display: flex;

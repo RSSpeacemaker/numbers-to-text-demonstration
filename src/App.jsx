@@ -1,4 +1,4 @@
-import { useEffect, useState, useRef } from 'react'
+import { useState } from 'react'
 import './App.css'
 
 const SignatureLogo = () => {
@@ -52,6 +52,7 @@ const TextInputContainer = ({ handleSubmit }) => {
 }
 
 const ErrorMessage = ({ visible }) => {
+  // Provide error message with adjusting opacity based on visibility
   return (
     <div className={ visible ? "error-notification" : "error-notification-invisible" }>
       <b>error</b>
@@ -60,6 +61,7 @@ const ErrorMessage = ({ visible }) => {
 };
 
 const Explanation = ({ visible }) => {
+  // Provide explanation with adjusting opacity based on visibility
   return (
     <div className={ visible ? "explanation" : "explanation-invisible" }>
       Valid inputs can only include numbers, commas, and spaces.<br/>
@@ -69,13 +71,28 @@ const Explanation = ({ visible }) => {
   );
 };
 
-const Result = ({ str, key }) => {
+const OverNineThousand = ({ str }) => {
+  // Construct special result for results that are 'over nine-thousand'
   return (
-    <div className="result" key={key}>{str}</div>
+    <div className="result">
+      <img src="./src/assets/its-over-9000.gif" alt="It's Over 9000!" className="its-over-nine-thousand" title={str}/>
+    </div>
   )
 }
 
+const Result = ({ str }) => {
+  // Construct Result
+  return (
+    str.includes("over nine-thousand") ? (
+      <OverNineThousand str={str}/>
+    ) : (
+      <div className="result">{str}</div>
+    )
+  );
+}
+
 const ResultsContainer = ( { strings } ) => {
+  // Construct container for results
   return <div className="results-container">
     {
       strings.map((str, index) => (
@@ -85,8 +102,11 @@ const ResultsContainer = ( { strings } ) => {
   </div>
 }
 
+// Main application - Alphabetical Sorting Screen
 const AlphabeticalSortingScreen = () => {
+  // Strings generated from inputed comma seperated numbers...
   const [strings, setStrings] = useState([]);
+  // Whether error is present or not...
   const [error, setError] = useState(false);
 
   // Handle submit function
@@ -96,13 +116,13 @@ const AlphabeticalSortingScreen = () => {
 
       convertUserInput(text).then(result => {
         setStrings(result);
-      })
+      });
     } else {
       setError(true);
     }
   }
 
-  // Return function
+  // Return App
   return (
     <>
       <SignatureLogo/>
@@ -119,10 +139,12 @@ const AlphabeticalSortingScreen = () => {
 
 export default AlphabeticalSortingScreen
 
+// Check to see if string is valid
 function isValidString(str) {
   return /^-?[\d,\s-]+$/.test(str);
 }
 
+// Function for obtaining the words through an API request
 function convertUserInput(text) {
   // Set up options for the fetch request
   const options = {
